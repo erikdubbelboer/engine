@@ -1003,6 +1003,9 @@ class LitShader {
 
             code.append("    getViewDir();");
             if (hasTBN) {
+                if (options.twoSidedLighting) {
+                    decl.append("#define TWO_SIDED_LIGHTING");
+                }
                 code.append("    getTBN(dTangentW, dBinormalW, dVertexNormalW);");
             }
         }
