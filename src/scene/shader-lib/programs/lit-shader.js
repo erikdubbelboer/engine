@@ -738,6 +738,9 @@ class LitShader {
                     func.append(chunks.TBNObjectSpacePS);
                 }
             }
+            if (options.twoSidedLighting) {
+                func.append(chunks.twoSidedLightingPS);
+            }
         }
 
         // FIXME: only add these when needed
@@ -976,10 +979,6 @@ class LitShader {
             func.append(chunks.clusteredLightPS);
         }
 
-        if (options.twoSidedLighting) {
-            decl.append("uniform float twoSidedLightingNegScaleFactor;");
-        }
-
         // FRAGMENT SHADER BODY
 
         code.append(this._fsGetStartCode(code, device, chunks, options));
@@ -994,10 +993,10 @@ class LitShader {
 
             code.append("    getViewDir();");
             if (hasTBN) {
-                if (options.twoSidedLighting) {
-                    decl.append("#define TWO_SIDED_LIGHTING");
-                }
                 code.append("    getTBN(dTangentW, dBinormalW, dVertexNormalW);");
+                if (options.twoSidedLighting) {
+                    code.append("    handleTwoSidedLighting();");
+                }
             }
         }
 
