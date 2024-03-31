@@ -714,7 +714,11 @@ class WebgpuGraphicsDevice extends GraphicsDevice {
         // DebugHelper.setLabel(cb, `${renderPass.name}-CommandBuffer`);
         DebugHelper.setLabel(cb, 'ComputePass-CommandBuffer');
 
-        this.addCommandBuffer(cb);
+        // Don't use this.addCommandBuffer(cb) as that means we'll have to
+        // wait for the render pass to finish before this is submitted
+        // which isn't required for compute shaders.
+        this.wgpu.queue.submit([cb]);
+
         this.commandEncoder = null;
 
         WebgpuDebug.end(this);
